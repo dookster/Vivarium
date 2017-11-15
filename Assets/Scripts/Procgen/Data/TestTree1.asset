@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec9f1eb04f1f9994d9960e2a268dfb14, type: 3}
+  m_Name: TestTree1
+  m_EditorClassIdentifier: 
+  TMPLeafPrefab: {fileID: 1552579260075158, guid: 58a894a7e1382b4448717945a1c59159,
+    type: 2}
+  plantName: Plant
+  type: 0
+  size: 1
+  height: 3
+  TrunkSize: 0.25
+  TrunkRadiusCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0.2
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.008976646
+      value: 0.2
+      inSlope: -0
+      outSlope: -0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  TrunkHeightSegmentCount: 20
+  TrunkRadialSegmentCount: 6
+  material: {fileID: 2100000, guid: 20453f532b9a6264fb984d8f8048a03a, type: 2}
+  color:
+    serializedVersion: 2
+    key0: {r: 0.35294116, g: 0.31476602, b: 0.12716262, a: 1}
+    key1: {r: 0.4852941, g: 0.35456985, b: 0.18912198, a: 1}
+    key2: {r: 0.17551471, g: 0.2842568, b: 0.434, a: 0}
+    key3: {r: 0.333852, g: 0.41047975, b: 0.516, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 22552
+    ctime2: 37779
+    ctime3: 65535
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 4
+    m_NumAlphaKeys: 2
+  curves: 0400000000000000
+  trunkHeight: 1
+  BranchSize: 0.75
+  BranchRadiusCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0.2
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.5
+      value: 0.2
+      inSlope: -0
+      outSlope: -0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  BranchHeightSegmentCount: 5
+  BranchRadialSegmentCount: 6
+  minLeaves: 2
+  maxLeaves: 5
+  minBranches: 1
+  maxBranches: 6
+  twinBranch: 0
+  sameAxisBranches: 0
