@@ -42,7 +42,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  TrunkHeightSegmentCount: 20
+  TrunkHeightSegmentCount: 35
   TrunkRadialSegmentCount: 6
   material: {fileID: 2100000, guid: 20453f532b9a6264fb984d8f8048a03a, type: 2}
   color:

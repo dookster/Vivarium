@@ -55,4 +55,12 @@ public class MeshBuilder  {
         return mesh;
     }
 
+    public void Clear()
+    {
+        m_Vertices.Clear();
+        m_Normals.Clear();
+        m_UVs.Clear();
+        m_Indices.Clear();
+    }
+
 }

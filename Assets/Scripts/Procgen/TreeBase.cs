@@ -7,12 +7,12 @@ public class TreeBase : MonoBehaviour {
     public BezierSpline CUSTOMSPLINE;
 
     public PlantData data;
-    
+
+    public bool animateGrowth = true;
+
     private BezierSpline trunkSpline;
     private List<BezierSpline> branchSplines = new List<BezierSpline>();
     private MeshBuilder meshBuilder;
-
-
 
     void Start ()
     {
@@ -52,54 +52,68 @@ public class TreeBase : MonoBehaviour {
             trunkSpline.AddCurveType(FlipCoin() ? CurveType.Straight : CurveType.Wave, Quaternion.Euler(0, Random.Range(0f, 360f), 0), data.size * data.height);
             trunkSpline.AddCurveType(FlipCoin() ? CurveType.Straight : CurveType.Wave, Quaternion.Euler(0, Random.Range(0f, 360f), 0), data.size * data.height);
 
-
-            //trunkSpline.AddCurveType(CurveType.Straight, Quaternion.identity, data.size);
-            //trunkSpline.AddCurveType(CurveType.Soft90, Quaternion.Euler(0, 0, 0), data.size, true);
-            //trunkSpline.AddCurveType(CurveType.Straight, Quaternion.Euler(0, 0, 0), data.size, true);
-            //trunkSpline.AddCurveType(CurveType.Hard90, Quaternion.Euler(0, 0, 0), data.size, true);
-            //trunkSpline.AddCurveType(CurveType.Hard90, Quaternion.Euler(0, 0, 0), data.size, true);
-            //trunkSpline.AddCurveType(CurveType.Soft90, Quaternion.Euler(0, 0, 0), data.size, true);
-
-            GenerateMeshAlongSpline(trunkSpline, data.TrunkHeightSegmentCount, data.TrunkRadialSegmentCount, data.TrunkRadiusCurve, data.TrunkSize * data.size);
-
-            // Branches
-            int numBranches = Random.Range(data.minBranches, data.maxBranches + 1);
-            float branchAngle = Random.Range(0f, 360f);
-            for (int n = numBranches; n > 0; n--)
+            if (animateGrowth)
             {
-                AddBranch((1f / numBranches) * n, Quaternion.Euler(0, branchAngle, 90));
-                
-                if (data.twinBranch)
-                {
-                    AddBranch((1f / numBranches) * n, Quaternion.Euler(0, branchAngle - 180, 90));
-                }
-                if (!data.sameAxisBranches)
-                {
-                    branchAngle = Random.Range(0f, 360f);
-                }
+                StartCoroutine(MakeTrunk(trunkSpline));
             }
-
-            // ADD LEAVES
-            int numLeaves = Random.Range(data.minLeaves, data.maxLeaves * 3);
-            for (int n = numLeaves; n > 0; n--)
+            else
             {
-                Vector3 pos = trunkSpline.GetPoint((1f / numLeaves) * n);
-                GameObject go = Instantiate(data.TMPLeafPrefab);
-                go.transform.position = transform.TransformPoint(pos + new Vector3(FlipCoin() ? 0.2f : -0.2f, 0, 0));// * localBranchSize * data.TrunkSize * data.size;
-                go.transform.rotation *= Quaternion.Euler(0, branchAngle, 0);
-                go.transform.SetParent(transform, true);
+                GenerateMeshAlongSpline(trunkSpline, 1f, data.TrunkHeightSegmentCount, data.TrunkRadialSegmentCount, data.TrunkRadiusCurve, data.TrunkSize * data.size);
+
+                // Branches
+                int numBranches = Random.Range(data.minBranches, data.maxBranches + 1);
+                float branchAngle = Random.Range(0f, 360f);
+                for (int n = numBranches; n > 0; n--)
+                {
+                    AddBranch((1f / numBranches) * n, Quaternion.Euler(0, branchAngle, 90));
+
+                    if (data.twinBranch)
+                    {
+                        AddBranch((1f / numBranches) * n, Quaternion.Euler(0, branchAngle - 180, 90));
+                    }
+                    if (!data.sameAxisBranches)
+                    {
+                        branchAngle = Random.Range(0f, 360f);
+                    }
+                }
+
+                // ADD LEAVES ON TRUNK
+                int numLeaves = Random.Range(data.minLeaves, data.maxLeaves * 3);
+                for (int n = numLeaves; n > 0; n--)
+                {
+                    Vector3 pos = trunkSpline.GetPoint((1f / numLeaves) * n);
+                    GameObject go = Instantiate(data.TMPLeafPrefab);
+                    go.transform.position = transform.TransformPoint(pos + new Vector3(FlipCoin() ? 0.2f : -0.2f, 0, 0));// * localBranchSize * data.TrunkSize * data.size;
+                    go.transform.rotation *= Quaternion.Euler(0, branchAngle, 0);
+                    go.transform.SetParent(transform, true);
+                }
             }
 
         }
         else
         {
-            GenerateMeshAlongSpline(CUSTOMSPLINE, data.TrunkHeightSegmentCount, data.TrunkRadialSegmentCount, data.TrunkRadiusCurve, data.TrunkSize * data.size);
+            GenerateMeshAlongSpline(CUSTOMSPLINE, 1f, data.TrunkHeightSegmentCount, data.TrunkRadialSegmentCount, data.TrunkRadiusCurve, data.TrunkSize * data.size);
         }
     }
 
     public bool FlipCoin()
     {
         return Random.Range(0, 2) == 0;
+    }
+
+    float growStep = 0.1f;
+
+    public IEnumerator MakeTrunk(BezierSpline spline)
+    {
+        yield return new WaitForSeconds(1f);
+        float growAmount = 0f;
+        while(growAmount <= 1f)
+        {
+            growAmount += growStep * Time.deltaTime;
+            meshBuilder.Clear();
+            GenerateMeshAlongSpline(trunkSpline, growAmount, data.TrunkHeightSegmentCount, data.TrunkRadialSegmentCount, data.TrunkRadiusCurve, data.TrunkSize * data.size);
+            yield return 0;
+        }
     }
 
     private void AddBranch(float height, Quaternion rotation)
@@ -132,10 +146,10 @@ public class TreeBase : MonoBehaviour {
         }
 
         branchSplines.Add(spline);
-        GenerateMeshAlongSpline(spline, data.TrunkHeightSegmentCount, data.BranchRadialSegmentCount, data.BranchRadiusCurve, localBranchSize * data.TrunkSize * data.size);
+        GenerateMeshAlongSpline(spline, 1, data.TrunkHeightSegmentCount, data.BranchRadialSegmentCount, data.BranchRadiusCurve, localBranchSize * data.TrunkSize * data.size);
     }
 
-    public void GenerateMeshAlongSpline(BezierSpline spline, int heightSegmentCount, int radialSegmentCount, AnimationCurve radiusCurve, float radiusMod)
+    public void GenerateMeshAlongSpline(BezierSpline spline, float splineLength, int heightSegmentCount, int radialSegmentCount, AnimationCurve radiusCurve, float radiusMod)
     {
         //meshBuilder = new MeshBuilder();
 
@@ -150,9 +164,9 @@ public class TreeBase : MonoBehaviour {
             bool adjustForwardRot = false;
             float t = (float)i / heightSegmentCount;
 
-            centrePos = spline.GetPoint(t);
+            centrePos = spline.GetPoint(t * splineLength);
 
-            Vector3 splineDir = spline.GetDirection(t);
+            Vector3 splineDir = spline.GetDirection(t * splineLength);
 
             Vector3 curFlatUp = Vector3.ProjectOnPlane(splineDir, Vector3.up).normalized;
             Vector3 curFlatRight = Vector3.ProjectOnPlane(splineDir, Vector3.right).normalized;
